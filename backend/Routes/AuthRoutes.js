@@ -6,6 +6,7 @@ const { validationErrorHandler } = require("../Middleware/ValidationErrorHandler
 const router = express.Router();
 
 // Auth Routes
+// added the validations and error handler middle ware
 router.post("/login", validateLogin, validationErrorHandler, login);
 router.post("/register", validateaddUser, validationErrorHandler, addUser);
 
