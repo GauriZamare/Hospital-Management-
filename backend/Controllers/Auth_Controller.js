@@ -3,6 +3,8 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../Models/User");
 
+
+// Controller for the adding the user 
 const addUser = async (req, res) => {
     try {
         const { fname, lname, email, password } = req.body;
@@ -41,7 +43,7 @@ const addUser = async (req, res) => {
     }
 };
 
-// Login Controller
+//  Login Controller
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
