@@ -9,7 +9,7 @@ function Login() {
   const [Spassword, SetSPassword] = useState("");
   const [email, Setemail] = useState("");
   const [password, SetPassword] = useState("");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const clearData = () => {
     SetFname("");
@@ -23,37 +23,45 @@ function Login() {
   const SignUp = (e) => {
     e.preventDefault();
     //console.log(fname+" "+lname+" "+Semail+" "+Spassword);
-    axios.post('http://localhost:8080/api/v1/auth/register', {
+    axios.post('http://localhost:8080/api/auth/register', {
       fname,
       lname,
-      "email":Semail,
-      "password":Spassword
+      "email": Semail,
+      "password": Spassword
     }).then(res => {
       console.log(res);
       alert('Signup Succesfull!...');
       clearData();
     }).catch(err => {
       console.log(err);
-      alert('Invalid Details')
+      try {
+        alert(err.response.data.errors[0].msg);
+      } catch (error) {
+        alert(err.response.data.msg);
+      }
       clearData();
     })
   }
 
   const Login = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8080/api/v1/auth/authenticate', {
+    axios.post('http://localhost:8080/api/auth/login', {
       email,
       password
     }).then(res => {
-       console.log(res);
-       localStorage.setItem("jwt",res.data.token)
-       localStorage.setItem('email',email);
+      console.log(res);
+      localStorage.setItem("jwt", res.data.token)
+      localStorage.setItem('email', email);
       alert('Login Succesfull!....');
       clearData();
       navigate("/");
     }).catch(err => {
       console.log(err);
-      alert('Invalid Details')
+      try {
+        alert(err.response.data.errors[0].msg);
+      } catch (error) {
+        alert(err.response.data.msg);
+      }
       clearData();
     })
   }
@@ -66,23 +74,23 @@ function Login() {
           <input type="checkbox" id="chk" aria-hidden="true" />
 
           <div class="abhisignup">
-            
-              <label for="chk" aria-hidden="true">Sign up</label>
-              <input type="text" name="fname" placeholder="First name" required="" value={fname} onChange={(e) => { SetFname(e.target.value) }} />
-              <input type="text" name="lname" placeholder="Last name" required="" value={lname} onChange={(e) => { SetLname(e.target.value) }} />
-              <input type="email" name="email" placeholder="Email" required="" value={Semail} onChange={(e) => { SetSemail(e.target.value) }} />
-              <input type="password" name="password" placeholder="Password" required="" value={Spassword} onChange={(e) => { SetSPassword(e.target.value) }} />
-              <button onClick={SignUp}>Sign up</button>
-            
+
+            <label for="chk" aria-hidden="true">Sign up</label>
+            <input type="text" name="fname" placeholder="First name" required="" value={fname} onChange={(e) => { SetFname(e.target.value) }} />
+            <input type="text" name="lname" placeholder="Last name" required="" value={lname} onChange={(e) => { SetLname(e.target.value) }} />
+            <input type="email" name="email" placeholder="Email" required="" value={Semail} onChange={(e) => { SetSemail(e.target.value) }} />
+            <input type="password" name="password" placeholder="Password" required="" value={Spassword} onChange={(e) => { SetSPassword(e.target.value) }} />
+            <button onClick={SignUp}>Sign up</button>
+
           </div>
 
           <div class="login">
-           
-              <label for="chk" aria-hidden="true">Login</label>
-              <input type="email" name="email" placeholder="Email" required="" value={email} onChange={(e) => { Setemail(e.target.value) }} />
-              <input type="password" name="password" placeholder="Password" required="" value={password} onChange={(e) => { SetPassword(e.target.value) }} />
-              <button onClick={Login} >Login</button>
-           
+
+            <label for="chk" aria-hidden="true">Login</label>
+            <input type="email" name="email" placeholder="Email" required="" value={email} onChange={(e) => { Setemail(e.target.value) }} />
+            <input type="password" name="password" placeholder="Password" required="" value={password} onChange={(e) => { SetPassword(e.target.value) }} />
+            <button onClick={Login} >Login</button>
+
           </div>
         </div>
       </div>
