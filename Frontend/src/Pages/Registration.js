@@ -7,11 +7,11 @@ function Registration() {
     const[lname,setlname]=useState();
     const[email,setemail]=useState();
     const[phone,setphone]=useState();
-    const[gender,setgender]=useState();
+    const[gender,setgender]=useState("Male");
     const[age,setage]=useState();
     const[height,setheight]=useState();
     const[weight,setweight]=useState();
-    const[medicalhistroy,setmedicalhistroy]=useState();
+    const[medicalhistory,setmedicalhistroy]=useState();
     const[docurl,setdocurl]=useState();
     const [selectedFile, setSelectedFile] = useState(null);
     const[isFileUpload,setFileUpload]=useState(true);
@@ -19,7 +19,7 @@ function Registration() {
     
   // console.log(isFileUpload);
     const token = localStorage.getItem('jwt');
-    const APIURL='http://localhost:8080/api/v1/profile/basicinfo/' + localStorage.getItem('email');
+    const APIURL='http://localhost:8080/api/auth/basicinfo/' + localStorage.getItem('email');
     // Set the Authorization header with the token
     // const headers = {
     //   'Content-Type': 'application/json',
@@ -32,8 +32,8 @@ function Registration() {
             setfname(res.data.fname);
             setlname(res.data.lname);
             setemail(res.data.email);
-        }).catch(err => { console.log(err); })
-    }, [])
+        }).catch(err => { console.log(err);})
+    }, [APIURL])
 
     const cleardata=()=>{
         setemail("");
@@ -52,17 +52,17 @@ function Registration() {
     const uploadFile= async (event)=>{
         event.preventDefault();
         const formData = new FormData();
-        formData.append('image', selectedFile);
+        formData.append('file', selectedFile);
         console.log("here");
         try {
             console.log("inside try");
-          const response = await axios.post('http://localhost:8084/', formData, {
+          const response = await axios.post('http://localhost:8080/api/file/upload', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           });
           console.log(response.data);
-          setdocurl(response.data);
+          setdocurl(response.data.fileUrl);
           setFileUpload(false);
           alert('File Uploded Successfully..')
         } catch (error) {
@@ -73,7 +73,17 @@ function Registration() {
 
     const Create=(e)=>{
         e.preventDefault();
-        axios.post('http://localhost:8080/api/v1/profile/save',{
+        console.log({fname,
+            lname,
+            email,
+            phone,
+            gender,
+            age,
+            height,
+            weight,
+            medicalhistory,
+            docurl});
+        axios.post('http://localhost:8080/api/profile/update-profile',{
             fname,
             lname,
             email,
@@ -82,7 +92,7 @@ function Registration() {
             age,
             height,
             weight,
-            medicalhistroy,
+            medicalhistory,
             docurl
         }).then(res=>{
             console.log(res);
@@ -126,7 +136,7 @@ function Registration() {
 
                                     <div class="input-field">
                                         <label>Gender</label>
-                                        <select required defaultValue={'Male'} onChange={(e)=>{setgender(e.target.value)}}>
+                                        <select required defaultValue={gender} onChange={(e)=>{setgender(e.target.value)}}>
                                             <option disabled selected>Select gender</option>
                                             <option>Male</option>
                                             <option>Female</option>
@@ -165,7 +175,7 @@ function Registration() {
 
                                     <div class="input-field">
                                         <label>Any Disease</label>
-                                        <input value={medicalhistroy} onChange={(e)=>{setmedicalhistroy(e.target.value)}} type="text" placeholder="Enter Medical Histroy" required />
+                                        <input value={medicalhistory} onChange={(e)=>{setmedicalhistroy(e.target.value)}} type="text" placeholder="Enter Medical Histroy" required />
                                         
                                     </div>
 

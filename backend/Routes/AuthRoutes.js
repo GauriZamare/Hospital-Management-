@@ -1,17 +1,17 @@
 const express = require("express");
-const { login, addUser } = require('../Controllers/Auth_Controller');
+const { login, addUser, getUserInfo } = require('../Controllers/Auth_Controller');
 const { authenticateUser } = require("../Middleware/AuthenticationUser");
 const { validateLogin, validateaddUser } = require("../Validators/Auth_Validators");
 const { validationErrorHandler } = require("../Middleware/ValidationErrorHandler");
-const router = express.Router();
+const authRouter = express.Router();
 
 // Auth Routes
 // added the validations and error handler middle ware
-router.post("/login", validateLogin, validationErrorHandler, login);
-router.post("/register", validateaddUser, validationErrorHandler, addUser);
+authRouter.post("/login", validateLogin, validationErrorHandler, login);
+authRouter.post("/register", validateaddUser, validationErrorHandler, addUser);
 
 
-// test
-router.get("/test", authenticateUser, (req, res) => { res.send("Hey Done") })
+// basicinfo get route
+authRouter.get("/basicinfo/:email", authenticateUser, getUserInfo)
 
-module.exports = router;
+module.exports = authRouter;

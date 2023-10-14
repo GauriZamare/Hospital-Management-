@@ -66,12 +66,30 @@ const login = async (req, res) => {
         }
 
         const token = jwt.sign({ userID: user._id }, process.env.SECRET_KEY);
-        req.user=user._id;
-        res.send({ status: "success", msg: "Login successful", User: user,token:token });
+        req.user = user._id;
+        res.send({ status: "success", msg: "Login successful", User: user, token: token });
     } catch (err) {
         console.error(err);
         res.status(500).send({ status: "error", msg: "Internal Server Error" });
     }
 };
 
-module.exports = { login, addUser }
+// controller to get the user basic info
+const getUserInfo = async (req, res) => {
+    try {
+        const email = req.params.email;
+        console.log(email);
+        const result = await User.findOne({ email });
+        //console.log(result);
+        if (result) {
+            return res.status(200).json(result);
+        } else {
+            res.status(404).json({ message: "Email doesnot exist" });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+
+}
+
+module.exports = { login, addUser, getUserInfo }

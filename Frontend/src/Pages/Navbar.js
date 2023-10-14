@@ -7,7 +7,7 @@ import axios from "axios";
 export const Navbar = () => {
   const navigate = useNavigate()
   const [isProfileset,setisProfile]=useState();
-  const APIURL = 'http://localhost:8080/api/v1/profile/' + localStorage.getItem('email')
+  const APIURL = 'http://localhost:8080/api/profile/' + localStorage.getItem('email')
   const token = localStorage.getItem('jwt');
   const headers = {
       'Content-Type': 'application/json',
@@ -16,6 +16,7 @@ export const Navbar = () => {
 
   useEffect(()=>{
     axios.get(APIURL, { headers }).then(res => {
+      console.log("here",res);
       if(res.data!="")
       setisProfile(true);
       else

@@ -13,8 +13,12 @@ const [height,setheight]=useState();
 const[Weight,setWeight]=useState();
 const[medicalhistroy,setmedicalhistroy]=useState();
 
+const token = localStorage.getItem('jwt');
 useEffect(()=>{
-axios.get('http://localhost:8080/api/v1/profile/'+localStorage.getItem('email')).then(res=>{
+axios.get('http://localhost:8080/api/profile/'+localStorage.getItem('email'),{
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  }).then(res=>{
     setname(res.data.fname+" "+res.data.lname);
     setemail(res.data.email);
     setphone(res.data.phone);

@@ -12,21 +12,23 @@ function Appoinment() {
     const [age, setage] = useState();
 
     const token = localStorage.getItem('jwt');
-    const APIURL='http://localhost:8080/api/v1/profile/basicinfo/' + localStorage.getItem('email');
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    const APIURL = 'http://localhost:8080/api/profile/' + localStorage.getItem('email');
     // Set the Authorization header with the token
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
     };
     useEffect(() => {
-        axios.get(APIURL, {headers}).then(res => {
+        axios.get(APIURL).then(res => {
             console.log(res);
             setfname(res.data.fname);
             setlname(res.data.lname);
+            setphone(res.data.phone);
         }).catch(err => { console.log(err); })
     }, [])
 
-    const clearData=()=>{
+    const clearData = () => {
         setfname("");
         setlname("");
         setage();
@@ -35,24 +37,24 @@ function Appoinment() {
         setdocname("")
         setphone("")
     }
-    const Book=()=>{
-       axios.post('http://localhost:8082/',{
-        fname,
-        lname,
-        phone,
-        docname,
-        age,
-        date,
-        time 
-       }).then(res=>{
-        console.log(res);
-        alert('Appoinment Booked Successfully')
-        clearData();
-       }).catch(err=>{
-        console.log(err);
-        alert('Something went wrong')
-        clearData();
-       })
+    const Book = () => {
+        axios.post('http://localhost:8080/api/appoinment/bookappoinment', {
+            fname,
+            lname,
+            phone,
+            doctor_name: docname,
+            age,
+            date,
+            time
+        }).then(res => {
+            console.log(res);
+            alert('Appoinment Booked Successfully')
+            clearData();
+        }).catch(err => {
+            console.log(err);
+            alert('Something went wrong')
+            clearData();
+        })
     }
     return (
         <>
@@ -72,7 +74,7 @@ function Appoinment() {
                                     id="name"
                                     placeholder="First Name"
                                     className="formbold-form-input"
-                                    onChange={(e)=>{setfname(e.target.value)}}
+                                    onChange={(e) => { setfname(e.target.value) }}
                                 />
                             </div>
                             <div className="formbold-mb-5">
@@ -84,7 +86,7 @@ function Appoinment() {
                                     id="name"
                                     placeholder="Last Name"
                                     className="formbold-form-input"
-                                    onChange={(e)=>{setlname(e.target.value)}}
+                                    onChange={(e) => { setlname(e.target.value) }}
                                 />
                             </div>
                             <div className="formbold-mb-5">
@@ -96,7 +98,7 @@ function Appoinment() {
                                     id="phone"
                                     placeholder="Enter your phone number"
                                     className="formbold-form-input"
-                                    onChange={(e)=>{setphone(parseInt(e.target.value))}}
+                                    onChange={(e) => { setphone(parseInt(e.target.value)) }}
                                 />
                             </div>
                             <div className="formbold-mb-5">
@@ -108,7 +110,7 @@ function Appoinment() {
                                     id="email"
                                     placeholder="Doctor Name"
                                     className="formbold-form-input"
-                                    onChange={(e)=>{setdocname(e.target.value)}}
+                                    onChange={(e) => { setdocname(e.target.value) }}
                                 />
                             </div>
                             <div className="flex flex-wrap formbold--mx-3">
@@ -121,7 +123,7 @@ function Appoinment() {
                                             name="date"
                                             id="date"
                                             className="formbold-form-input"
-                                            onChange={(e)=>{setdate(e.target.value)}}
+                                            onChange={(e) => { setdate(e.target.value) }}
                                         />
                                     </div>
                                 </div>
@@ -134,7 +136,7 @@ function Appoinment() {
                                             name="time"
                                             id="time"
                                             className="formbold-form-input"
-                                            onChange={(e)=>{setTime(e.target.value)}}
+                                            onChange={(e) => { setTime(e.target.value) }}
                                         />
                                     </div>
                                 </div>
@@ -149,7 +151,7 @@ function Appoinment() {
                                             type="number"
                                             name="age"
                                             value={age}
-                                            onChange={(e)=>{setage(parseInt(e.target.value))}}
+                                            onChange={(e) => { setage(parseInt(e.target.value)) }}
                                             id="area"
                                             placeholder="Enter age"
                                             className="formbold-form-input"
